@@ -92,4 +92,3 @@ This is the second line, it does not have indent
 - Add docstring formatting function to subtract extra indents
 - Include different formatting (Numpy, reStructuredText)
 
-
