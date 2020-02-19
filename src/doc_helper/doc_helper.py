@@ -28,7 +28,7 @@ class DocHelper(object):
             self.add(**kwargs)
 
     def add(self, **kwargs):
-        """Add kwarg arguments to the doc helper var_lib"""
+        """Add kwarg arguments to the doc helper lib"""
 
         for key, doc in kwargs.items():
             if isinstance(doc, str):
@@ -84,6 +84,7 @@ class DocHelper(object):
 
         def parse_arg_domain(domain):
             import re
+            # this regex is a bit weird - but it does the job
             return tuple([arg for arg in re.split(r'\s*[;|,|\s|<<|>>]\s*', domain) if arg != ''])
 
         split = []
@@ -112,5 +113,3 @@ class DocHelper(object):
             return func
 
         return decorator
-
-

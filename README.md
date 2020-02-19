@@ -5,6 +5,7 @@ I have been writing many functions with shared arguments (or to pass through - n
 `DocHelper` solved this problem by keep the docstring for arguments (or other objects) in the same place and compose the docstring in Google format for your functions/classes when you need them.
 
 
+
 ### Usage
 
 ```python
@@ -47,3 +48,7 @@ Args:
     arg1: Just an simple argument 
     arg3 (int): This argument is integer
 ```
+
+
+### TODO
+- Include different formatting (Numpy, reStructuredText)
