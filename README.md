@@ -32,12 +32,13 @@ Args:
 """)
 def another_awesome_function(arg1, arg3):
     # getting your job down
+    return 0
 
 
 >>> awesome_function.__doc__
 This is my awesome function
 Args:
-    arg1: Just an simple argument 
+    arg1: Just an simple argument
     arg2: Also an simple argument
     arg3 (int): This argument is integer
 
@@ -45,10 +46,11 @@ Args:
 >>> another_awesome_function.__doc__
 This is another awesome function only takes arg1, arg3
 Args:
-    arg1: Just an simple argument 
+    arg1: Just an simple argument
     arg3 (int): This argument is integer
 ```
 
 
 ### TODO
 - Include different formatting (Numpy, reStructuredText)
+
