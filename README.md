@@ -51,78 +51,82 @@ my_doc.add(
 )
 ```
 
+### Use `DocHelper.get()` to get formatted docstring for arguments
+
+```python
+# Pass a list/tuple of argument names to `DocHelper.get()`
+>>> my_doc.get(['arg1', 'arg3'])
+    arg1: Just an simple argument
+    arg3 (int): This argument is integer
+
+# Pass a callable (function) to automatic find related arguments (except 'self')
+def awesome_function(arg1, arg3):
+    pass
+
+>>> my_doc.get(awesome_function)
+    arg1: Just an simple argument
+    arg3 (int): This argument is integer
+```
+ 
+
 ### Use decorator `DocHelper.compose` to write template
 
 Simply write a string with comma separated arguments name in `<<` and `>>`.
 Default indents is 4, just add a number to change to desired indents.
 
 ```python
+# Example 1
+
 @my_doc.compose("""This is my awesome function
 Args:
-<<arg1, arg2, arg3>>
+<<arg1, arg2>>
+   arg3: This arg3 is special
 """)
 def awesome_function(arg1, arg2, arg3):
-    # getting your job down
-
-
-@my_doc.compose("""This is another awesome function only takes arg1, arg3, and I want indent = 8
-Args:
-<<arg1, arg2, 8>>
-""")
-def another_awesome_function(arg1, arg3):
-    # getting your job down
-    return 0
-
+    pass
 
 >>> awesome_function.__doc__
 This is my awesome function
 Args:
     arg1: Just an simple argument
     arg2: Also an simple argument
-    arg3 (int): This argument is integer
+    arg3: This arg3 is special
 
+
+# Example 2
+
+@my_doc.compose("""This is another awesome function only takes arg1, arg3, and I want indent = 8
+Args:
+<<arg1, arg2, 8>>
+""")
+def another_awesome_function(arg1, arg3):
+    pass
 
 >>> another_awesome_function.__doc__
 This is another awesome function only takes arg1, arg3, and I wand indent = 8
 Args:
         arg1: Just an simple argument
         arg3 (int): This argument is integer
-```
-
-## Caveats
-It seems triple quote will not automatic align the indent, so you need to start
-write from the top of lines. It could be improved by calling the docstring
-formatting function (TODO).
-
-```python
-class YourClass:
-
-    @my_doc.compose("""This is the first line
-This is the second line, it does not have indent
-    """)
-    def good_example(self, arg1):
-        # do something
-        return 0
 
 
+# Example 3
 
-    @my_doc.compose("""This is the first line
-    This is the second line, it have indents
-    """)
-    def bad_example(self, arg1):
-        # do something
-        return 0
+@my_doc.compose("""Feeling lazy? left it blank to include all arguments (except 'self')
+Args:
+<<>>
+""")
+def another_another_awesome_function(arg1, arg2, arg3):
+    pass
 
->>> YourClass.good_example.__doc__
-This is the first lines
-This is the second line, it does not have indent
+>>> another_another_awesome_function.__doc__
+This is my awesome function
+Args:
+    arg1: Just an simple argument
+    arg2: Also an simple argument
+    arg3 (int): This argument is integer
 
-
->>> YourClass.bad_example.__doc__
-This is the first line
-    This is the second line, it have indents
 ```
 
 ## TODO
-- Add docstring formatting function to subtract extra indents
+- ~~Add docstring formatting function to subtract extra indents~~
 - Include different formatting (Numpy, reStructuredText)

@@ -49,10 +49,10 @@ def test_DocHelper_compose_doc_decorator_works():
     )
 
     @doc.compose("""Here is an example
-<<arg1, arg2>>
-Args:
-<<arg2, arg3, 8>>
-""")
+    <<arg1, arg2>>
+    Args:
+    <<arg2, arg3, 8>>
+    """)
     def target_func(arg1):
         pass
 
@@ -61,7 +61,7 @@ Args:
                                   "    arg2: Docstring for arg2\n" \
                                   "Args:\n" \
                                   "        arg2: Docstring for arg2\n" \
-                                  "        arg3 (type for arg3): Docstring for arg3\n"
+                                  "        arg3 (type for arg3): Docstring for arg3"
 
 
 def test_DocHelper_compose_doc_decorator_no_effect_works():
@@ -72,12 +72,31 @@ def test_DocHelper_compose_doc_decorator_no_effect_works():
     )
 
     @doc.compose("""Here is an example of simple docstring with no argument substitution
-Args:
-    args1
-""")
+    Args:
+        args1
+    """)
     def target_func(arg1):
         pass
 
     assert target_func.__doc__ == "Here is an example of simple docstring with no argument substitution\n" \
                                   "Args:\n" \
-                                  "    args1\n"
+                                  "    args1"
+
+
+def test_DocHelper_compose_doc_decorator_func_works():
+    doc = DocHelper(
+        arg1='Docstring for arg1',
+        arg2=('Docstring for arg2'),
+        arg3=('type for arg3', 'Docstring for arg3')
+    )
+
+    @doc.compose("""Here is an example of simple docstring to replace function's arguments
+    Args:
+    << >>
+    """)
+    def target_func(arg1):
+        pass
+
+    assert target_func.__doc__ == "Here is an example of simple docstring to replace function's arguments\n" \
+                                  "Args:\n" \
+                                  "    arg1: Docstring for arg1"

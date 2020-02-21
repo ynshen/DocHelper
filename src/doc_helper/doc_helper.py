@@ -56,10 +56,10 @@ class DocHelper(object):
 
             sep (str): separation symbols between docstring lines (in addition of a natural line break). Default `\n`
         """
+
         if callable(var_names):
-            from .func_tools import get_func_params
-            var_names = get_func_params(func=var_names, exclude_x=False)
-            var_names = [name for name in var_names if name != 'self']
+            from inspect import signature
+            var_names = list([arg for arg in list(signature(var_names).parameters) if arg != 'self'])
         elif isinstance(var_names, str):
             var_names = [var_names]
         else:
@@ -103,13 +103,25 @@ class DocHelper(object):
         return split
 
     def compose(self, docstring, indent=4, sep='\n'):
-        docstring = ''.join(
-            [s if isinstance(s, str) else self.get(s, indent=indent, sep=sep)
-             for s in self.split_string(docstring)]
-        )
+        from inspect import cleandoc, signature
+
+        def parse_splits(s):
+            if isinstance(s, str):
+                return s
+            elif isinstance(s, tuple):
+                if s == ():
+                    return '{func}'
+                else:
+                    return self.get(s, indent=indent, sep=sep)
+
+        docstring = ''.join([parse_splits(s) for s in self.split_string(cleandoc(docstring))])
 
         def decorator(func):
-            func.__doc__ = docstring
+
+            if '{func}' in docstring:
+                func.__doc__ = docstring.format(func=self.get(func))
+            else:
+                func.__doc__ = docstring
             return func
 
         return decorator
