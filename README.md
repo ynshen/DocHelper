@@ -14,13 +14,13 @@ template in Google format.
 Works from Jupyter notebook to Sphinx where docstrings were read by importing.
 
 ## Installation
-### Install using `pip` (recommended)
+#### Install using `pip` (recommended)
 
 ```bash
 pip install doc-helper
 ```
 
-### Install from source
+#### Install from source
 ```bash
 # make sure you have setuptools and wheel installed
 
@@ -32,7 +32,7 @@ pip install dist/the-wheel-file-of-your-version.whl
 
 ## Usage
 
-### Initialize a `DocHelper` with argument docstrings
+#### Initialize a `DocHelper` with argument docstrings
 
 ```python
 from doc_helper import DocHelper
@@ -44,30 +44,35 @@ my_doc = DocHelper(
 )
 ```
 
-### Add arguments when you needed
+#### Add arguments when you needed
 ```python
 my_doc.add(
     arg4=('pd.DataFrame', 'Just a new argument')
 )
 ```
 
-### Use `DocHelper.get()` to get formatted docstring for arguments
+#### Use `DocHelper.get()` to get formatted docstring for arguments
 
 ```python
 # Pass a list/tuple of argument names to `DocHelper.get()`
->>> my_doc.get(['arg1', 'arg3'])
-    arg1: Just an simple argument
+>>> print(my_doc.get(['arg1', 'arg3'], indent_at_top=False))
+arg1: Just an simple argument
     arg3 (int): This argument is integer
+
+# control behavior through `indent`, `indent_at_top`, and `sep`
+>>> print(my_doc.get(['arg1', 'arg3'], indent_at_top=True, indent=8, sep='|\n'))
+        arg1: Just an simple argument|
+        arg3 (int): This argument is integer
 
 # Pass a callable (function) to automatic find related arguments (except 'self')
 def awesome_function(arg1, arg3):
     pass
 
->>> my_doc.get(awesome_function)
+>>> print(my_doc.get(awesome_function, indent_at_top=True))
     arg1: Just an simple argument
     arg3 (int): This argument is integer
 ```
- 
+
 
 ### Use decorator `DocHelper.compose` to write template
 
@@ -79,13 +84,13 @@ Default indents is 4, just add a number to change to desired indents.
 
 @my_doc.compose("""This is my awesome function
 Args:
-<<arg1, arg2>>
-   arg3: This arg3 is special
+    <<arg1, arg2>>
+    arg3: This arg3 is special
 """)
 def awesome_function(arg1, arg2, arg3):
     pass
-
->>> awesome_function.__doc__
+ 
+>>> print(awesome_function.__doc__)
 This is my awesome function
 Args:
     arg1: Just an simple argument
@@ -98,28 +103,27 @@ Args:
 @my_doc.compose("""This is another awesome function only takes arg1, arg3, and I want indent = 8
 Args:
 <<arg1, arg2, 8>>
-""")
+""", indent_at_top=True)
 def another_awesome_function(arg1, arg3):
     pass
 
->>> another_awesome_function.__doc__
+>>> print(another_awesome_function.__doc__)
 This is another awesome function only takes arg1, arg3, and I wand indent = 8
 Args:
         arg1: Just an simple argument
         arg3 (int): This argument is integer
 
-
 # Example 3
 
 @my_doc.compose("""Feeling lazy? left it blank to include all arguments (except 'self')
 Args:
-<<>>
+    <<>>
 """)
 def another_another_awesome_function(arg1, arg2, arg3):
     pass
 
 >>> another_another_awesome_function.__doc__
-This is my awesome function
+Feeling lazy? left it blank to include all arguments (except 'self')
 Args:
     arg1: Just an simple argument
     arg2: Also an simple argument
@@ -127,6 +131,14 @@ Args:
 
 ```
 
+## Update
+- version 1.1.1: indents at the top of `<<  >>` can be controlled through `DocHelper.compose(indent_at_top=False/True)`, default False.
+- version 1.1.0: extra indents at the top of each lines were subtracted
+
 ## TODO
 - ~~Add docstring formatting function to subtract extra indents~~
 - Include different formatting (Numpy, reStructuredText)
+
+```
+
+```
