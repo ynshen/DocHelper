@@ -127,6 +127,10 @@ Args:
 
 ```
 
+## Update
+- version 1.1.1: indents at the top of `<<  >>` can be controlled through `DocHelper.compose(indent_at_top=False/True)`, default False.
+- version 1.1.0: extra indents at the top of each lines were subtracted
+
 ## TODO
 - ~~Add docstring formatting function to subtract extra indents~~
 - Include different formatting (Numpy, reStructuredText)

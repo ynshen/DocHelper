@@ -44,7 +44,7 @@ class DocHelper(object):
         else:
             return f"{variable.name} ({variable['dtype']}): {variable['docstring']}"
 
-    def get(self, var_names, indent=4, sep='\n'):
+    def get(self, var_names, indent=4, indent_at_top=False, sep='\n'):
         """Generate a formatted docstring
 
         Args:
@@ -77,7 +77,10 @@ class DocHelper(object):
         var_names = var_names_t
         indent = ' ' * indent
         doc = list(self.var_lib.reindex(var_names).apply(self._record_to_string, axis=1))
-        return indent + (sep + indent).join(doc)
+        if indent_at_top:
+            return indent + (sep + indent).join(doc)
+        else:
+            return (sep + indent).join(doc)
 
     @staticmethod
     def split_string(string):
@@ -102,8 +105,8 @@ class DocHelper(object):
             split.append(string)
         return split
 
-    def compose(self, docstring, indent=4, sep='\n'):
-        from inspect import cleandoc, signature
+    def compose(self, docstring, indent=4, indent_at_top=False, sep='\n'):
+        from inspect import cleandoc
 
         def parse_splits(s):
             if isinstance(s, str):
@@ -112,7 +115,7 @@ class DocHelper(object):
                 if s == ():
                     return '{func}'
                 else:
-                    return self.get(s, indent=indent, sep=sep)
+                    return self.get(s, indent=indent, sep=sep, indent_at_top=indent_at_top)
 
         docstring = ''.join([parse_splits(s) for s in self.split_string(cleandoc(docstring))])
 
