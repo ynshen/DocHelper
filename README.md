@@ -122,7 +122,7 @@ Args:
 def another_another_awesome_function(arg1, arg2, arg3):
     pass
 
->>> another_another_awesome_function.__doc__
+>>> print(another_another_awesome_function.__doc__)
 Feeling lazy? left it blank to include all arguments (except 'self')
 Args:
     arg1: Just an simple argument
